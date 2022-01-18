@@ -16,8 +16,7 @@ Deploying the function
 gcloud functions deploy create_import_job \\
   --runtime python39 \\
   --trigger-resource <bucket name> \\
-  --trigger-event google.storage.object.finalize \\
-  --env-vars-file=env.yaml
+  --trigger-event google.storage.object.finalize
 ```
 
 Reading the logs
