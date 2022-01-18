@@ -1,5 +1,7 @@
 # Uploading data to Goalplan using Cloud Functions
 
+Upload file to bucket -> function uploads to Goalplan -> Moves file to processed (done)
+
 ## Reference documentation
 
 Cloud functions: https://cloud.google.com/functions
