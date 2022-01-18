@@ -1,4 +1,5 @@
 import os
+import json
 
 import requests
 from google.cloud import storage
@@ -17,32 +18,50 @@ def create_import_job(event, context):
         None; the output is written to Stackdriver Logging
     """
 
-    api_url = os.environ['API_URL']
-    api_token = os.environ['API_TOKEN']
+    with open('config.json') as f:
+        config = json.load(f)
 
-    input_folder = os.environ['INPUT_FOLDER']
-    processed_folder = os.environ['PROCESSED_FOLDER']
+    api_token = config['api_token']
+    api_base_url = config['base_url']
+    import_jobs_mapping = config['import_jobs_mapping']
 
-    bucket, file_name = event['bucket'], event['name']
-    if file_name.startswith(processed_folder) or not file_name.startswith(input_folder):
+    bucket, file_path = event['bucket'], event['name']
+    file_folder, file_name = file_path.rsplit('/', maxsplit=1)
+
+    for folder, definition_id in import_jobs_mapping.items():
+        if folder == file_folder:
+            matched_definition_id = definition_id
+            print(f"Matched file {file_path}. Using configured definition id {definition_id}.")
+            break
+    else:
+        print(f"Ignoring file {file_path}. No match found in configured import_jobs_mapping.")
         return
 
     client = storage.Client()
 
     client_bucket = client.bucket(bucket)
-    blob = client_bucket.get_blob(file_name)
+    blob = client_bucket.get_blob(file_path)
     file_content = blob.download_as_bytes(raw_download=True)
 
     headers = {
         'Authorization': f'Token {api_token}',
         'Content-Type': event['contentType']
     }
+    data_url = api_base_url + matched_definition_id
 
-    response = requests.post(api_url, data=file_content, headers=headers)
+    response = requests.post(data_url, data=file_content, headers=headers)
     if response.status_code == 202:
-        processed_file_name = file_name.replace(input_folder, processed_folder)
-        client_bucket.rename_blob(blob, new_name=processed_file_name)
+        import_job_url = response.json()['url']
+        import_job_id = import_job_url.rstrip('/').rsplit('/', 1)[-1]
+        print(f"Successfully created import job file with id: {import_job_id}")
+
+        file_name, file_extension = os.path.splitext(file_name)
+        new_name = f'{folder}/processed/{file_name}_{import_job_id}{file_extension}'
+
+        print(f"Moving file {file_path} to processed folder path: {new_name}")
+        client_bucket.rename_blob(blob, new_name=new_name)
     else:
-        print(response.status_code)
-        print(response.content)
-        raise Exception("Failed to create import job")
+        raise Exception(
+            f"Failed to create import job, got response status code: {response.status_code}, "
+            f"with content: {response.content}"
+        )
