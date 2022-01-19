@@ -13,20 +13,20 @@ def create_import_job(event, context):
     Returns:
         None; the output is written to Stackdriver Logging
     """
-    base_url = "https://stage-api.goalplan.com/data/import/"
+    base_url = "https://api.example.com/data/import/"
     api_token = "******"
     file_mappings = {
-        "data-upload/phone-data": "e23f7a01-d814-452b-8846-5f8d3f70bb09"
+        "data-upload/phone-data": "a23f7a01-d814-452b-8846-5f8d3f70bb09"
     }
 
     client = BucketFileImporter(base_url, api_token, file_mappings)
 
     # or read from dictionary
     # config = {
-    #     "base_url": "https://stage-api.goalplan.com/data/import/",
+    #     "base_url": "https://api.example.com/data/import/",
     #     "api_token": "******",
     #     "file_mappings": {
-    #         "data-upload/phone-data": "e23f7a01-d814-452b-8846-5f8d3f70bb09"
+    #         "data-upload/phone-data": "a23f7a01-d814-452b-8846-5f8d3f70bb09"
     #     }
     # }
     # BucketFileImporter.from_dict(config)
