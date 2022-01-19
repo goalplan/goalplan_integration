@@ -18,6 +18,18 @@ def create_import_job(event, context):
     Returns:
         None; the output is written to Stackdriver Logging
     """
+
+    """
+    from goalplan.google import BucketFileImporter
+    
+    client = BucketFileImporter(base_url, api_token, file_mappings)
+
+    or
+
+    client = BucketFileImporter.from_config_file(file_path_to_json_config, **config_overrides)
+    client.handle(bucket, filepath, dry_run=True/False)
+    """
+
     config_path = Path(__file__).with_name('config.json')
     with open(config_path) as f:
         config = json.load(f)
