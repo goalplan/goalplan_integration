@@ -9,4 +9,8 @@ setup(
     packages=find_packages('src'),
     package_dir={'': 'src'},
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
+    install_requires=[
+        "google-cloud-storage==2.0.0",
+        "requests==2.26.0",
+    ],
 )
