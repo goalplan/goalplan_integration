@@ -1,0 +1,1 @@
+-e git://github.com/goalplan/goalplan_integration.git@create-import-job-cloud-function#egg=goalplan
