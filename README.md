@@ -4,4 +4,4 @@ This project contains information, examples, and code to help with integrating d
 
 ## Examples
 
-[Data upload using Google Cloud Storage Bucket + Cloud Function](examples/google_cloud/bucket_cloud_function/README.md)
+[Data upload using Google Cloud Storage Bucket + Cloud Function](examples/google_cloud/bucket_cloud_function)
