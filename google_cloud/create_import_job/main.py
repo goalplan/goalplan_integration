@@ -1,8 +1,9 @@
 import os
 import json
+from pathlib import Path
 
 import requests
-from google.cloud import storage
+from google.cloud.storage import Client as StorageClient
 
 
 def create_import_job(event, context):
@@ -17,8 +18,8 @@ def create_import_job(event, context):
     Returns:
         None; the output is written to Stackdriver Logging
     """
-
-    with open('config.json') as f:
+    config_path = Path(__file__).with_name('config.json')
+    with open(config_path) as f:
         config = json.load(f)
 
     api_token = config['api_token']
@@ -37,7 +38,7 @@ def create_import_job(event, context):
         print(f"Ignoring file {file_path}. No match found in configured import_jobs_mapping.")
         return
 
-    client = storage.Client()
+    client = StorageClient()
 
     client_bucket = client.bucket(bucket)
     blob = client_bucket.get_blob(file_path)
