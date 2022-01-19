@@ -20,6 +20,7 @@ def create_import_job(event, context):
     }
 
     client = BucketFileImporter(base_url, api_token, file_mappings)
+
     # or read from dictionary
     # config = {
     #     "base_url": "https://stage-api.goalplan.com/data/import/",
@@ -28,9 +29,11 @@ def create_import_job(event, context):
     #         "data-upload/phone-data": "e23f7a01-d814-452b-8846-5f8d3f70bb09"
     #     }
     # }
-    # client.from_dict(config)
+    # BucketFileImporter.from_dict(config)
 
     # or read from json config file
     # client = BucketFileImporter.from_config_file('config.json')
 
-    client.handle_event(event, context, True)
+    # Use dry_run=False once you want to go live
+    client.handle_event(event, context, dry_run=True)
+

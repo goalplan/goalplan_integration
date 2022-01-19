@@ -105,7 +105,10 @@ class BucketFileImporter:
 
         storage_client.rename(bucket, file_path, new_name)
 
-    def handle_event(self, event, context, dry_run):
+    def handle_event(self, event, context, dry_run=None):
+        if dry_run not in [True, False]:
+            raise Exception('dry_run needs to be either True or False')
+
         bucket = event['bucket']
         file_path = event['name']
         content_type = event['contentType']
