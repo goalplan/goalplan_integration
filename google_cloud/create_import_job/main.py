@@ -20,6 +20,14 @@ def create_import_job(event, context):
     """
 
     """
+    
+    Library structure:
+    
+    - src
+    - tests
+    - examples
+      - google_cloud/bucket_cloud_function
+    
     from goalplan.google import BucketFileImporter
     
     client = BucketFileImporter(base_url, api_token, file_mappings)
