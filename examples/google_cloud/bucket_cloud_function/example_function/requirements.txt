@@ -1,1 +1,1 @@
--e git+https://github.com/goalplan/goalplan_integration.git@v0.1#egg=goalplan
+-e git+https://github.com/goalplan/goalplan_integration.git@v0.2#egg=goalplan
