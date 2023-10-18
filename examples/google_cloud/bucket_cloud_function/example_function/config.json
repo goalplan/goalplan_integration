@@ -2,6 +2,6 @@
   "base_url" : "https://api.example.com/data/import/",
   "api_token": "******",
   "file_mappings": {
-    "data-upload/phone-data": "a23f7a01-d814-452b-8846-5f8d3f70bb09"
+    "pdl-matchi/matchi_QLIK_bookings.csv": "a23f7a01-d814-452b-8846-5f8d3f70bb09"
   }
 }

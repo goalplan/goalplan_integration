@@ -1,6 +1,9 @@
 import json
 
+import fnmatch
 import os
+import re
+
 import requests
 from google.cloud.storage import Client as StorageClient
 
@@ -56,10 +59,11 @@ class BucketFileImporter:
 
         return cls.from_dict(config)
 
-    def _get_matching_definition_id(self, file_folder):
-        for folder, definition_id in self.file_mappings.items():
-            if folder == file_folder:
-                return definition_id
+    def _get_matching_definition_id(self, file_path):
+        for match_pattern, definition_id, move_to_path in self.file_mappings:
+            if re.match(match_pattern, file_path):
+                return definition_id, move_to_path
+        return None, None
 
     def _create_import_job(self, definition_id, file_content, content_type, dry_run):
         data_url = self.base_url.rstrip('/') + '/' + definition_id
@@ -88,7 +92,7 @@ class BucketFileImporter:
     def handle(self, bucket, file_path, content_type, dry_run):
         file_folder, file_name = file_path.rsplit('/', maxsplit=1)
 
-        matched_definition_id = self._get_matching_definition_id(file_folder)
+        matched_definition_id, move_to_path = self._get_matching_definition_id(file_path)
         if not matched_definition_id:
             print(f"Ignoring file {file_path}. No match found in configured file_mappings.")
             return
@@ -100,10 +104,10 @@ class BucketFileImporter:
 
         import_job_id = self._create_import_job(matched_definition_id, file_content, content_type, dry_run)
 
-        file_name, file_extension = os.path.splitext(file_path)
-        new_name = f'{file_folder}/processed/{file_name}_{import_job_id}{file_extension}'
-
-        storage_client.rename(bucket, file_path, new_name)
+        if move_to_path is not None:
+            file_name, file_extension = os.path.splitext(file_path)
+            new_name = f'{move_to_path}/{file_name}_{import_job_id}{file_extension}'
+            storage_client.rename(bucket, file_path, new_name)
 
     def handle_event(self, event, context, dry_run=None):
         if dry_run not in [True, False]:
