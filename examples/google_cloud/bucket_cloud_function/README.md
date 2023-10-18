@@ -16,11 +16,11 @@ Data flow: Upload file to bucket -> function uploads to Goalplan -> Moves file t
 
 ```bash
 gcloud functions deploy <your-function-name> \
-  --runtime python311 \
   --trigger-resource <google-cloud-bucket-name>  \
-  --entry-point create_import_job \
   --trigger-event google.storage.object.finalize \
-  --set-secrets GOALPLAN_DATA_IMPORT_TOKEN=<secret-name>:<secret-version>
+  --set-secrets GOALPLAN_DATA_IMPORT_TOKEN=<secret-name>:<secret-version> \
+  --entry-point create_import_job \
+  --runtime python311
 ```
 
 - Upload a file in the bucket
