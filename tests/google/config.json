@@ -1,7 +1,11 @@
 {
-  "base_url" : "https://stage-api.goalplan.com/data/import/",
+  "base_url": "https://stage-api.goalplan.com/data/import/",
   "api_token": "test-token",
-  "file_mappings": {
-    "data-upload/phone-data": "e23f7a01-d814-452b-8846-5f8d3f70bb09"
-  }
+  "file_mappings": [
+    [
+      "data-upload/phone-data/[^/]+.txt",
+      "e23f7a01-d814-452b-8846-5f8d3f70bb09",
+      "goalplan-processed"
+    ]
+  ]
 }
