@@ -11,13 +11,16 @@ Data flow: Upload file to bucket -> function uploads to Goalplan -> Moves file t
 ## Step by step instructions
 
 - Copy the content of [example_function](example_function) directory to a new directory of your choice
+- Update the configuration in main.py to match the pattern of the files that should be uploaded to Goalplan
 - Deploy the function
 
 ```bash
-gcloud functions deploy <your-cloud-function-name> \
-  --runtime python39 \
-  --trigger-resource <bucket name> \
-  --trigger-event google.storage.object.finalize
+gcloud functions deploy <your-function-name> \
+  --trigger-resource <google-cloud-bucket-name>  \
+  --trigger-event google.storage.object.finalize \
+  --set-secrets GOALPLAN_DATA_IMPORT_TOKEN=<secret-name>:<secret-version> \
+  --entry-point create_import_job \
+  --runtime python311
 ```
 
 - Upload a file in the bucket
@@ -27,8 +30,13 @@ gcloud functions deploy <your-cloud-function-name> \
 gcloud functions logs read
 ```
 
-- The example code will work without configuration changes, as it will run all code in a "dry run" mode
-- When the cloud function is up and running properly, contact your Goalplan integration contact for real configurations.
+- Please note that there is a potential bug in gcloud functions deploy that causes re-deploy to fail. A workaround
+  for this problem is that you delete the function and then deploy the function again.
+
+```bash
+gcloud functions delete <your-function-name>
+```
+
 
 ## Security
 
