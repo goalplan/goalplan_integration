@@ -44,7 +44,19 @@ We recommend you to store the token using Google Cloud secrets in the cloud func
 that we refer to [Googles documentation about using secrets in Cloud Functions](https://cloud.google.com/functions/docs/configuring/secrets). If you need further
 assistance place contact your Goalplan integration contact.
 
+### roles/secretmanager.secretAccessor
+
+When you added the secret as per Googles documentation, you need to assure that the service account that is running the
+cloud function has the **roles/secretmanager.secretAccessor** permission. To find out what service account is running
+the cloud function:
+
+```bash
+gcloud functions describe <your-function-name>
+```
+
 ## Reference documentation
+
+Install gcloud cli: https://cloud.google.com/sdk/docs/install-sdk
 
 Cloud functions: https://cloud.google.com/functions
 
