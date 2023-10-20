@@ -10,7 +10,7 @@ Data flow: Upload file to bucket -> function uploads to Goalplan -> Moves file t
 
 ## Step by step instructions
 
-- Copy the content of [example_function](example_function) directory to a new directory of your choice
+- Download and unzip [bucket_cloud_function_example.zip](bucket_cloud_function_example.zip) to a folder of your choice
 - Update the configuration in main.py to match the pattern of the files that should be uploaded to Goalplan
 - Deploy the function
 
